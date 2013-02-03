@@ -112,7 +112,9 @@ namespace MonoMac.Foundation {
 			}
 		}
 
+		[MonoNativeFunctionWrapper]
 		delegate IntPtr RetainTrampolineDelegate (IntPtr @this, IntPtr sel);
+		[MonoNativeFunctionWrapper]
 		delegate void ReleaseTrampolineDelegate (IntPtr @this, IntPtr sel);
 		static IntPtr RetainTrampolineFunctionPointer;
 		static IntPtr ReleaseTrampolineFunctionPointer;
@@ -238,6 +240,7 @@ namespace MonoMac.Foundation {
 			return objc_msgSendSuper (ref sup, sel);
 		}
 
+		[MonoPInvokeCallback(typeof(ReleaseTrampolineDelegate))]
 		static void ReleaseTrampoline (IntPtr @this, IntPtr sel)
 		{
 			int ref_count = Messaging.int_objc_msgSend (@this, Selector.RetainCount);
@@ -274,6 +277,7 @@ namespace MonoMac.Foundation {
 			InvokeObjCMethodImplementation (@this, sel);
 		}
 
+		[MonoPInvokeCallback(typeof(RetainTrampolineDelegate))]
 		static IntPtr RetainTrampoline (IntPtr @this, IntPtr sel)
 		{
 			int ref_count = Messaging.int_objc_msgSend (@this, Selector.RetainCount);
